@@ -1,0 +1,44 @@
+/*global module:false*/
+module.exports = function(grunt) {
+
+  require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
+
+  grunt.initConfig({
+
+    jshint: {
+      options: {
+        jshintrc: '.jshintrc',
+      },
+      libs: {
+        src: ['Gruntfile.js', 'index.js', 'test/**/*.js']
+      }
+    },
+
+    release: {
+       options: {
+         bump: true,
+         add: true, 
+         commit: true,
+         tag: true, 
+         push: true, 
+         pushTags: true, 
+         npm: true, 
+         commitMessage: 'release <%= version %>',
+         tagMessage: 'Version <%= version %>'
+       }
+     },
+
+    simplemocha: {
+      options: {
+        timeout: 3000,
+        ui: 'bdd'
+      },
+
+      all: { src: ['test/**/*.js'] }
+    },
+
+  });
+
+  grunt.registerTask('default', ['jshint']);
+  grunt.registerTask('test', ['jshint', 'simplemocha:all']);
+};
