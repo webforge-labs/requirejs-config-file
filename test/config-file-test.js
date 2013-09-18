@@ -61,14 +61,25 @@ describe("ConfigFile", function() {
       it("returns all the properties in the config", function(done) {
         var config = configFile.read(function (err, config) {
           expect(err).to.not.exist;
-          
           expect(config).to.include.keys('paths');
           done();
         });
       });
     });
 
+    describe("witha var require definition", function () {
+      var configFile = new ConfigFile(fixture('var-config.js'));
+
+      it("returns the properties from config", function (done) {
+        configFile.read(function (err, config) {
+          expect(err).to.not.exist;
+          expect(config).to.include.keys('paths');
+          done();
+        });
+      });
+    });
   });
+
 
   describe("#write()", function() {
   });

@@ -17,6 +17,7 @@ exports.ConfigFile = function(filePath) {
       var found = false;
       if (program.type === 'Program') {
         _.forEach(program.body, function(statement) {
+
           if (statement.expression && statement.expression.type === 'CallExpression') {
             var call = statement.expression;
 
@@ -25,6 +26,17 @@ exports.ConfigFile = function(filePath) {
               found = true;
               return false;
             }
+          } else if(statement.type === 'VariableDeclaration') {
+            var requireVarFound = true;
+            _.forEach(statement.declarations, function(declarator) {
+              if (declarator.id.name === 'require') {
+                that.readObjectExpression(declarator.init, contents, callback);
+                found = requireVarFound = true;
+                return false;
+              }
+            });
+
+            if (requireVarFound) return false;
           }
         });
       }
