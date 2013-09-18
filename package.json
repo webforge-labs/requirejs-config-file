@@ -1,0 +1,29 @@
+{
+  "name": "requirejs-config-file",
+  "version": "1.0.0",
+  "description": "A small api to read and write your requirejs config file",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/webforge-labs/requirejs-config-file.git"
+  },
+  "keywords": [
+    "requirejs",
+    "config"
+  ],
+  "author": "Philipp Scheit <p.scheit@ps-webforge.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/webforge-labs/requirejs-config-file/issues"
+  },
+  "devDependencies": {
+    "chai": "~1.7.2"
+  },
+  "dependencies": {
+    "esprima": "~1.0.4",
+    "lodash": "~2.0.0"
+  }
+}
