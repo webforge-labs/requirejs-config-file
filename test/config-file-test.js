@@ -33,6 +33,20 @@ describe("ConfigFile", function() {
       });
     });
 
+    describe("with a requirejs.config() call with a define() in the file", function() {
+      var configFile = new ConfigFile(fixture('config-with-define.js'));
+
+      it("returns all the properties in the config", function(done) {
+        var config = configFile.read(function (err, config) {
+          expect(err).to.not.exist;
+
+          expect(config).to.include.keys('paths');
+          done();
+        });
+      });
+    });
+
+
     describe("with a normal requirejs.config() call in the file", function() {
       var configFile = new ConfigFile(fixture('normal-config.js'));
 

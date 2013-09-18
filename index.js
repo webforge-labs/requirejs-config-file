@@ -14,20 +14,24 @@ exports.ConfigFile = function(filePath) {
       var contents = data.toString();
       var program = esprima.parse(contents, {range: true});
 
+      var found = false;
       if (program.type === 'Program') {
         _.forEach(program.body, function(statement) {
           if (statement.expression && statement.expression.type === 'CallExpression') {
             var call = statement.expression;
 
-            if (call.callee.object.name === 'requirejs' || call.callee.object.name === 'require' && call.callee.property.name === 'config') {
+            if (call.callee.type === 'MemberExpression' && (call.callee.object.name === 'requirejs' || call.callee.object.name === 'require') && call.callee.property.name === 'config') {
               that.readObjectExpression(call.arguments[0], contents, callback);
+              found = true;
+              return false;
             }
           }
         });
       }
 
-      //info.str = fileContents.substring(node.range[0], node.range[1]);
-      //config = eval("(" + info.str + ")");
+      if (!found) {
+        callback("cannot find config in file", null);
+      }
     });
   };
 
