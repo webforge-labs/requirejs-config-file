@@ -2,7 +2,6 @@
 requirejs.config({
 
   baseUrl: '/js-built/lib',
-  urlArgs: "bust=" +  (new Date()).getTime(),
 
   packages: [
     {

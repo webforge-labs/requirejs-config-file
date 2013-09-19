@@ -1,6 +1,6 @@
 var path = require('path');
 var chai = require('chai');
-var fs = require("fs");
+var fs = require('fs-extra');
 var expect = chai.expect;
 var assert = chai.assert;
 //chai.use(require('./helpers/file'));
@@ -67,7 +67,7 @@ describe("ConfigFile", function() {
       });
     });
 
-    describe("witha var require definition", function () {
+    describe("with a var require definition", function () {
       var configFile = new ConfigFile(fixture('var-config.js'));
 
       it("returns the properties from config", function (done) {
@@ -80,8 +80,80 @@ describe("ConfigFile", function() {
     });
   });
 
-
   describe("#write()", function() {
+    var testModify = function(configName, modify, done) {
+      var configFilePath = tmpPath(configName);
+      fs.copy(fixture(configName), configFilePath, function (err) {
+        expect(err).to.not.exist;
+
+        var configFile = new ConfigFile(configFilePath);
+
+        configFile.read(function (err, config) {
+          expect(err).to.not.exist;
+
+          modify(config);
+
+          configFile.write(function (err) {
+            expect(err).to.not.exist;
+
+            var expectedContents = fs.readFileSync(fixture('modified-'+configName)).toString();
+            var actualContents = fs.readFileSync(configFilePath).toString();
+
+            assert.equal(expectedContents, actualContents);
+            done();
+          });
+        });
+      });
+    };
+
+    it('writes the file with the modified config for a normal config', function (done) {
+      testModify(
+        'normal-config.js', 
+        function (config) {
+          config.paths['monster'] = '/path/to/monster';
+        }, 
+        done
+      );
+    });
+
+    it('writes the file with the modified config for a var config', function (done) {
+      testModify(
+        'var-config.js', 
+        function (config) {
+          config.paths['lodash'] = '/path/to/lodash.min';
+        },
+        done
+      );
+    });
   });
 
+  /*
+  describe('#create', function () {
+    beforeEach(function (done) {
+      fs.unlink(tmpPath('new-config.js'), done);
+    });
+
+    it('writes the file with a new config in requirejs.config style if it is created without parameter', function (done) {
+      var configFile = new ConfigFile(tmpPath('new-config.js'));
+
+      configFile.create(function (config) {
+        config.baseUrl = '/js-built/lib';
+        config.paths['lodash'] = '/path/to/lodash.min';
+        config.paths['jquery'] = '/path/to/jquery.1.8.2.min';
+      });
+
+      configFile.write(function(err) {
+        expect(err).to.not.exist;
+
+      });
+
+      testModify(
+        'empty-config.js',
+        function (config) {
+        },
+        done
+      );
+    });
+  });
+  */
 });
