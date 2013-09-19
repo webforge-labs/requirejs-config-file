@@ -10,6 +10,8 @@ var tmpPath = function (relativePath) {
   return (tmpDir+relativePath).split(/\//).join(path.sep);
 };
 
+fs.mkdirSync(tmpDir);
+
 var fixture = function(relativePath) {
   return ('files/fixtures/'+relativePath).split(/\//).join(path.sep);
 };
