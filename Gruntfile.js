@@ -31,7 +31,8 @@ module.exports = function(grunt) {
     simplemocha: {
       options: {
         timeout: 3000,
-        ui: 'bdd'
+        ui: 'bdd',
+        reporter: 'spec'
       },
 
       all: { src: ['test/**/*.js'] }
