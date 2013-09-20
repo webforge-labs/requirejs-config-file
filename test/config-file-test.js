@@ -10,8 +10,8 @@ var tmpPath = function (relativePath) {
   return (tmpDir+relativePath).split(/\//).join(path.sep);
 };
 
-if (!fs.lstatSync(tmpDir).isDirectory()) {
-  fs.mkdirSync(tmpDir);
+if (!fs.existsSync(path)) {
+  fs.mkdirsSync(tmpDir);
 }
 
 var fixture = function(relativePath) {
