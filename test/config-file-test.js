@@ -82,6 +82,19 @@ describe("ConfigFile", function() {
         });
       });
     });
+
+    describe("with an parse error config", function() {
+      var configFile = new ConfigFile(fixture('parse-error-config.js'));
+
+      it("shows an error", function (done) {
+        configFile.read(function(err) {
+          expect(err).to.exist;
+          expect(err).to.include('syntax error');
+          console.log(err);
+          done();
+        });
+      });
+    });
   });
 
   describe("#write()", function() {

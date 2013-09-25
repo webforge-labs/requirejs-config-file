@@ -10,7 +10,7 @@ module.exports = function(grunt) {
         jshintrc: '.jshintrc',
       },
       libs: {
-        src: ['Gruntfile.js', 'index.js', 'test/**/*.js']
+        src: ['Gruntfile.js', 'index.js', 'test/**/*.js', '!files/fixtures/parse-error-config.js']
       }
     },
 

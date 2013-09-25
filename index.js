@@ -30,7 +30,13 @@ exports.ConfigFile = function(filePath) {
       if (err) return callback(err, null);
 
       that.contents = data.toString();
-      var program = esprima.parse(that.contents, {range: true});
+      var program;
+
+      try {
+        program = esprima.parse(that.contents, {range: true});
+      } catch (ex) {
+        return callback('could not read: '+filePath+' because it has syntax errors: '+ex, null);
+      }
 
       that.type = 'empty';
       if (program.type === 'Program') {
