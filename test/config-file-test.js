@@ -90,10 +90,22 @@ describe("ConfigFile", function() {
         configFile.read(function(err) {
           expect(err).to.exist;
           expect(err).to.include('syntax error');
-          console.log(err);
           done();
         });
       });
+    });
+
+    describe("with an empty config", function() {
+      var configFile = new ConfigFile(fixture('empty-config.js'));
+
+      it("reads the config file and returns an empty object without notice", function (done) {
+        configFile.read(function(err, config) {
+          expect(err).to.not.exist;
+          expect(config).to.exist.and.to.be.a('object').and.to.be.empty;
+          done();
+        });
+      });
+
     });
   });
 
@@ -116,7 +128,7 @@ describe("ConfigFile", function() {
             var expectedContents = fs.readFileSync(fixture('modified-'+configName)).toString();
             var actualContents = fs.readFileSync(configFilePath).toString();
 
-            assert.equal(expectedContents, actualContents);
+            assert.equal(actualContents, expectedContents);
             done();
           });
         });
@@ -138,6 +150,16 @@ describe("ConfigFile", function() {
         'var-config.js', 
         function (config) {
           config.paths['lodash'] = '/path/to/lodash.min';
+        },
+        done
+      );
+    });
+
+    it("writes an empty read config with a requirejs.config call", function(done) {
+      testModify(
+        'empty-config.js',
+        function (config) {
+          return config.baseUrl = './js-build/lib';
         },
         done
       );

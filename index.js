@@ -1,7 +1,7 @@
 var fs = require('fs');
 var esprima = require('esprima');
 var _ = require('lodash');
-var util= require('util');
+var util = require('util');
 var stringifyObject = require("stringify-object");
 
 exports.ConfigFile = function(filePath) {
@@ -65,17 +65,26 @@ exports.ConfigFile = function(filePath) {
       }
 
       if (that.type === 'empty') {
-        callback("cannot find config in file", null);
+        that.config = {};
+        callback(null, that.config);
       }
     });
   };
 
   this.write = function(callback) {
-    if (!this.range) {
-      throw new Error('The config cannot be written. Was it read() before? The config expression has to be found to allow writing');
-    }
+    var contents;
 
-    var contents = that.contents.substring(0, that.range[0]) + that.buildConfig() + that.contents.substring(that.range[1]);
+    if (this.type === 'empty') {
+      contents = util.format("/* globals requirejs */\nrequirejs.config(%s);\n", that.buildConfig());
+
+    } else {
+
+      if (!this.range) {
+        throw new Error('The config cannot be written. Was it read() before? The config expression has to be found to allow writing');
+      }
+
+      contents = that.contents.substring(0, that.range[0]) + that.buildConfig() + that.contents.substring(that.range[1]);
+    }
 
     fs.writeFile(filePath, contents, callback);
   };
