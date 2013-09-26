@@ -26,13 +26,36 @@ describe("ConfigFile", function() {
   describe("#read()", function () {
 
     describe("with a non-existing file", function() {
-      var configFile = new ConfigFile(fixture('non-existing-config.js'));
+      var nonExistingFile = fixture('non-existing-config.js');
+      var configFile = new ConfigFile(nonExistingFile);
+
+      beforeEach(function(done) {
+        if (fs.existsSync(nonExistingFile)) {
+          fs.unlink(fixture('non-existing-config.js'), done);
+        } else {
+          done();
+        }
+      });
 
       it("returns an error", function(done) {
         configFile.read(function(err) {
           expect(err).to.exist;
           expect(err.toString()).to.contain('non-existing-config.js');
           done();
+        });
+      });
+
+      describe("when createIfNotExists() is used before", function() {
+        beforeEach(function() {
+          configFile.createIfNotExists();
+        });
+
+        it("returns a empty config", function(done) {
+          configFile.read(function(err, config) {
+            expect(err).to.not.exist;
+            expect(config).to.exist.and.to.be.a('object').and.to.be.empty;
+            done();
+          });
         });
       });
     });
@@ -164,35 +187,27 @@ describe("ConfigFile", function() {
         done
       );
     });
-  });
 
-  /*
-  describe('#create', function () {
-    beforeEach(function (done) {
-      fs.unlink(tmpPath('new-config.js'), done);
-    });
+    describe('with a non existing file which is createIfNotExists() before', function () {
+      var nonExistingFile = fixture('non-existing-config.js');
+      var configFile = new ConfigFile(nonExistingFile);
 
-    it('writes the file with a new config in requirejs.config style if it is created without parameter', function (done) {
-      var configFile = new ConfigFile(tmpPath('new-config.js'));
-
-      configFile.create(function (config) {
-        config.baseUrl = '/js-built/lib';
-        config.paths['lodash'] = '/path/to/lodash.min';
-        config.paths['jquery'] = '/path/to/jquery.1.8.2.min';
+      beforeEach(function(done) {
+        if (fs.existsSync(nonExistingFile)) {
+          fs.unlink(fixture('non-existing-config.js'), done);
+        } else {
+          done();
+        }
       });
 
-      configFile.write(function(err) {
-        expect(err).to.not.exist;
+      it("writes the file", function(done) {
+        configFile.createIfNotExists();
 
+        configFile.write(function (err) {
+          expect(err).to.not.exist;
+          done();
+        });
       });
-
-      testModify(
-        'empty-config.js',
-        function (config) {
-        },
-        done
-      );
     });
   });
-  */
 });

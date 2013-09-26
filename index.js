@@ -15,6 +15,7 @@ exports.ConfigFile = function(filePath) {
    * requirejs = config was read with requirejs.config({...})
    * require = config was read with require.config({...})
    * empty = no config expression was found (but read() was called)
+   * create-if-not-exists = createIfNotExists() was called so it might not have an existing file
    */
   this.type = null;
 
@@ -27,7 +28,13 @@ exports.ConfigFile = function(filePath) {
 
   this.read = function (callback) {
     fs.readFile(filePath, function(err, data) {
-      if (err) return callback(err, null);
+      if (err) {
+        if (err.code === 'ENOENT' && that.type === 'create-if-not-exists') {
+          return callback(null, that.config);
+        } else {
+          return callback(err, null);
+        }
+      }
 
       that.contents = data.toString();
       var program;
@@ -74,13 +81,13 @@ exports.ConfigFile = function(filePath) {
   this.write = function(callback) {
     var contents;
 
-    if (this.type === 'empty') {
+    if (this.type === 'empty' || this.type === 'create-if-not-exists') {
       contents = util.format("/* globals requirejs */\nrequirejs.config(%s);\n", that.buildConfig());
 
     } else {
 
       if (!this.range) {
-        throw new Error('The config cannot be written. Was it read() before? The config expression has to be found to allow writing');
+        throw new Error('The config cannot be written. Was it read() before? The config expression has to be found to allow writing. You can use createIfNotExists() to create an empty config.');
       }
 
       contents = that.contents.substring(0, that.range[0]) + that.buildConfig() + that.contents.substring(that.range[1]);
@@ -88,6 +95,16 @@ exports.ConfigFile = function(filePath) {
 
     fs.writeFile(filePath, contents, callback);
   };
+
+  /**
+   * Creates the config(File) if not already existing
+   *
+   * notice: you still need to write() it to have a physical existing file.
+   */
+  this.createIfNotExists = function(config) {
+    that.config = config || {};
+    that.type = 'create-if-not-exists';
+  },
 
   this.buildConfig = function() {
     return stringifyObject(

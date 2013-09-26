@@ -1,0 +1,2 @@
+/* globals requirejs */
+requirejs.config({});
