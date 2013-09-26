@@ -1,4 +1,4 @@
-var fs = require('fs');
+var fs = require('fs-extra');
 var esprima = require('esprima');
 var _ = require('lodash');
 var util = require('util');
@@ -93,7 +93,7 @@ exports.ConfigFile = function(filePath) {
       contents = that.contents.substring(0, that.range[0]) + that.buildConfig() + that.contents.substring(that.range[1]);
     }
 
-    fs.writeFile(filePath, contents, callback);
+    fs.outputFile(filePath, contents, callback);
   };
 
   /**

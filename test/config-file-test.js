@@ -208,6 +208,19 @@ describe("ConfigFile", function() {
           done();
         });
       });
+
+
+      it("writes the file and creates directories", function(done) {
+        var nonExistingFile = tmpPath('in/directory/non-existing-config.js');
+        var configFile = new ConfigFile(nonExistingFile);
+
+        configFile.createIfNotExists();
+
+        configFile.write(function (err) {
+          expect(err).to.not.exist;
+          done();
+        });
+      });
     });
   });
 });
