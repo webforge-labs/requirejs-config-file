@@ -1,6 +1,6 @@
 {
   "name": "requirejs-config-file",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A small api to read and write your requirejs config file",
   "main": "index.js",
   "scripts": {
