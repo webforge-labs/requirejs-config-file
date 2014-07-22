@@ -1,6 +1,5 @@
 var fs = require('fs-extra');
 var esprima = require('esprima');
-var _ = require('lodash');
 var util = require('util');
 var stringifyObject = require("stringify-object");
 
@@ -47,7 +46,7 @@ exports.ConfigFile = function(filePath) {
 
       that.type = 'empty';
       if (program.type === 'Program') {
-        _.forEach(program.body, function(statement) {
+        program.body.forEach(function(statement) {
 
           if (statement.expression && statement.expression.type === 'CallExpression') {
             var call = statement.expression;
@@ -58,7 +57,7 @@ exports.ConfigFile = function(filePath) {
               return false;
             }
           } else if(statement.type === 'VariableDeclaration') {
-            _.forEach(statement.declarations, function(declarator) {
+            statement.declarations.forEach(function(declarator) {
               if (declarator.id.name === 'require') {
                 that.type = 'var';
                 that.readObjectExpression(declarator.init, callback);

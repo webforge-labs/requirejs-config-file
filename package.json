@@ -30,7 +30,6 @@
   },
   "dependencies": {
     "esprima": "~1.0.4",
-    "lodash": "~2.0.0",
     "stringify-object": "~0.1.7",
     "fs-extra": "~0.6.4"
   }
