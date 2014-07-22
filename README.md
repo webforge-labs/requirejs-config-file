@@ -1,6 +1,9 @@
 # requirejs-config-file
 
+[![NPM](https://nodei.co/npm/requirejs-config-file.png?downloads=true)](https://nodei.co/npm/requirejs-config-file/)
+
 A small api to read and write your requirejs config file
+
 
 ## installation
 
