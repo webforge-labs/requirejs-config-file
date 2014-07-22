@@ -1,4 +1,4 @@
-# requirejs-config-file
+# requirejs-config-file [![Build Status](https://travis-ci.org/webforge-labs/requirejs-config-file.svg?branch=master)](https://travis-ci.org/webforge-labs/requirejs-config-file)
 
 [![NPM](https://nodei.co/npm/requirejs-config-file.png?downloads=true)](https://www.npmjs.org/package/requirejs-config-file)
 
