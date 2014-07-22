@@ -25,59 +25,64 @@ exports.ConfigFile = function(filePath) {
 
   this.contents = null;
 
-  this.read = function (callback) {
-    fs.readFile(filePath, function(err, data) {
-      if (err) {
-        if (err.code === 'ENOENT' && that.type === 'create-if-not-exists') {
-          return callback(null, that.config);
-        } else {
-          return callback(err, null);
-        }
-      }
+  // returns the config object from the read file
+  this.read = function () {
+    var callback = function(){};
+    try {
+      var data = fs.readFileSync(filePath);
 
       that.contents = data.toString();
-      var program;
 
-      try {
-        program = esprima.parse(that.contents, {range: true});
-      } catch (ex) {
-        return callback('could not read: '+filePath+' because it has syntax errors: '+ex, null);
+    } catch (err) {
+      if (err.code === 'ENOENT' && that.type === 'create-if-not-exists') {
+        return that.config;
+      } else {
+        throw err;
       }
+    }
 
-      that.type = 'empty';
-      if (program.type === 'Program') {
-        program.body.forEach(function(statement) {
+    var program;
 
-          if (statement.expression && statement.expression.type === 'CallExpression') {
-            var call = statement.expression;
+    try {
+      program = esprima.parse(that.contents, {range: true});
+    } catch (ex) {
+      throw new Error('could not read: '+filePath+' because it has syntax errors: '+ex);
+    }
 
-            if (call.callee.type === 'MemberExpression' && (call.callee.object.name === 'requirejs' || call.callee.object.name === 'require') && call.callee.property.name === 'config') {
-              that.type = call.callee.object.name === 'require' ? 'require' : 'requirejs';
-              that.readObjectExpression(call.arguments[0], callback);
+    that.type = 'empty';
+    if (program.type === 'Program') {
+      program.body.forEach(function(statement) {
+
+        if (statement.expression && statement.expression.type === 'CallExpression') {
+          var call = statement.expression;
+
+          if (call.callee.type === 'MemberExpression' && (call.callee.object.name === 'requirejs' || call.callee.object.name === 'require') && call.callee.property.name === 'config') {
+            that.type = call.callee.object.name === 'require' ? 'require' : 'requirejs';
+            that.readObjectExpression(call.arguments[0], callback);
+            return false;
+          }
+        } else if(statement.type === 'VariableDeclaration') {
+          statement.declarations.forEach(function(declarator) {
+            if (declarator.id.name === 'require') {
+              that.type = 'var';
+              that.readObjectExpression(declarator.init, callback);
               return false;
             }
-          } else if(statement.type === 'VariableDeclaration') {
-            statement.declarations.forEach(function(declarator) {
-              if (declarator.id.name === 'require') {
-                that.type = 'var';
-                that.readObjectExpression(declarator.init, callback);
-                return false;
-              }
-            });
+          });
 
-            if (that.type === 'var') return false;
-          }
-        });
-      }
+          if (that.type === 'var') return false;
+        }
+      });
+    }
 
-      if (that.type === 'empty') {
-        that.config = {};
-        callback(null, that.config);
-      }
-    });
+    if (that.type === 'empty') {
+      that.config = {};
+    }
+
+    return that.config;
   };
 
-  this.write = function(callback) {
+  this.write = function() {
     var contents;
 
     if (this.type === 'empty' || this.type === 'create-if-not-exists') {
@@ -92,7 +97,7 @@ exports.ConfigFile = function(filePath) {
       contents = that.contents.substring(0, that.range[0]) + that.buildConfig() + that.contents.substring(that.range[1]);
     }
 
-    fs.outputFile(filePath, contents, callback);
+    fs.outputFileSync(filePath, contents);
   };
 
   /**
