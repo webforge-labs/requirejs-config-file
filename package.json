@@ -28,8 +28,8 @@
     "matchdep": "~0.1.2"
   },
   "dependencies": {
-    "esprima": "~1.0.4",
-    "stringify-object": "~0.1.7",
-    "fs-extra": "~0.6.4"
+    "esprima": "^2.7.3",
+    "stringify-object": "^2.4.0",
+    "fs-extra": "^1.0.0"
   }
 }
