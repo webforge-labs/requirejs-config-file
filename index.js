@@ -52,7 +52,7 @@ class ConfigFile {
     try {
       program = esprima.parse(this.contents, {range: true});
     } catch (ex) {
-      throw new Error('could not read: '+this.filePath+' because it has syntax errors: '+ex);
+      throw new Error(`could not read: ${this.filePath} because it has syntax errors: ${ex}`);
     }
 
     this.type = 'empty';
@@ -129,7 +129,7 @@ class ConfigFile {
     /* jshint evil:true */
     if (objectExpression && objectExpression.type === 'ObjectExpression') {
       try {
-        this.config = eval('('+this.contents.substring(objectExpression.range[0], objectExpression.range[1])+')');
+        this.config = eval(`(${this.contents.substring(objectExpression.range[0], objectExpression.range[1])})`);
 
       } catch (syntaxError) {
         return callback(syntaxError, null);
