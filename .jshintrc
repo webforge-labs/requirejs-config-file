@@ -13,6 +13,7 @@
   "eqnull": true,
   "node": true,
   "expr": true,
+  "esversion": 6,
 
   "globals": {
     "requirejs": true, "define": true, "require": true,
