@@ -19,6 +19,9 @@
   "bugs": {
     "url": "https://github.com/webforge-labs/requirejs-config-file/issues"
   },
+  "engines": {
+    "node": ">=4.0.0"
+  },
   "devDependencies": {
     "chai": "^3.5.0",
     "grunt": "^1.0.1",
