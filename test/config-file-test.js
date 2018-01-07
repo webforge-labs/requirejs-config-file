@@ -1,14 +1,14 @@
 'use strict';
 
-var path = require('path');
-var chai = require('chai');
-var fs = require('fs-extra');
-var expect = chai.expect;
-var assert = chai.assert;
+const path = require('path');
+const chai = require('chai');
+const fs = require('fs-extra');
+const expect = chai.expect;
+const assert = chai.assert;
 //chai.use(require('./helpers/file'));
 
-var tmpDir = "files/tmp/";
-var tmpPath = function (relativePath) {
+const tmpDir = "files/tmp/";
+const tmpPath = function (relativePath) {
   return (tmpDir+relativePath).split(/\//).join(path.sep);
 };
 
@@ -16,20 +16,20 @@ if (!fs.existsSync(path)) {
   fs.mkdirsSync(tmpDir);
 }
 
-var fixture = function(relativePath) {
+const fixture = function(relativePath) {
   return ('files/fixtures/'+relativePath).split(/\//).join(path.sep);
 };
 
 // Class Under Test
-var ConfigFile = require('../index').ConfigFile;
+const ConfigFile = require('../index').ConfigFile;
 
 describe("ConfigFile", function() {
 
   describe("#read()", function () {
 
     describe("with a non-existing file", function() {
-      var nonExistingFile = fixture('non-existing-config.js');
-      var configFile = new ConfigFile(nonExistingFile);
+      const nonExistingFile = fixture('non-existing-config.js');
+      const configFile = new ConfigFile(nonExistingFile);
 
       beforeEach(function(done) {
         if (fs.existsSync(nonExistingFile)) {
@@ -40,7 +40,7 @@ describe("ConfigFile", function() {
       });
 
       it("it throws an error if file not found", function() {
-        var read = function() {
+        const read = function() {
           configFile.read();
         };
 
@@ -53,17 +53,17 @@ describe("ConfigFile", function() {
         });
 
         it("returns a empty config", function() {
-          var config = configFile.read();
+          const config = configFile.read();
           expect(config).to.exist.and.to.be.a('object').and.to.be.empty;
         });
       });
     });
 
     describe("with a requirejs.config() call with a define() in the file", function() {
-      var configFile = new ConfigFile(fixture('config-with-define.js'));
+      const configFile = new ConfigFile(fixture('config-with-define.js'));
 
       it("returns all the properties in the config", function() {
-        var config = configFile.read();
+        const config = configFile.read();
 
         expect(config).to.include.keys('paths');
       });
@@ -71,34 +71,34 @@ describe("ConfigFile", function() {
 
 
     describe("with a normal requirejs.config() call in the file", function() {
-      var configFile = new ConfigFile(fixture('normal-config.js'));
+      const configFile = new ConfigFile(fixture('normal-config.js'));
 
       it("returns the config as an object", function() {
-        var config = configFile.read();
+        const config = configFile.read();
         expect(config).to.exist.and.to.be.an('object');
       });
 
       it("returns all the properties in the config", function() {
-        var config = configFile.read();
+        const config = configFile.read();
 
         expect(config).to.be.an('object').and.to.include.keys('paths');
       });
     });
 
     describe("with a var require definition", function() {
-      var configFile = new ConfigFile(fixture('var-config.js'));
+      const configFile = new ConfigFile(fixture('var-config.js'));
 
       it("returns the properties from config", function() {
-        var config = configFile.read();
+        const config = configFile.read();
         expect(config).to.include.keys('paths');
       });
     });
 
     describe("with an parse error config", function() {
-      var configFile = new ConfigFile(fixture('parse-error-config.js'));
+      const configFile = new ConfigFile(fixture('parse-error-config.js'));
 
       it("shows an error", function () {
-        var read = function() {
+        const read = function() {
           configFile.read();
         };
 
@@ -107,10 +107,10 @@ describe("ConfigFile", function() {
     });
 
     describe("with an empty config", function() {
-      var configFile = new ConfigFile(fixture('empty-config.js'));
+      const configFile = new ConfigFile(fixture('empty-config.js'));
 
       it("reads the config file and returns an empty object without notice", function() {
-        var config = configFile.read();
+        const config = configFile.read();
 
         expect(config).to.exist.and.to.be.a('object').and.to.be.empty;
       });
@@ -118,21 +118,21 @@ describe("ConfigFile", function() {
   });
 
   describe("#write()", function() {
-    var testModify = function(configName, modify, done) {
-      var configFilePath = tmpPath(configName);
+    const testModify = function(configName, modify, done) {
+      const configFilePath = tmpPath(configName);
       fs.copy(fixture(configName), configFilePath, function (err) {
         expect(err).to.not.exist;
 
-        var configFile = new ConfigFile(configFilePath);
+        const configFile = new ConfigFile(configFilePath);
 
-        var config = configFile.read();
+        const config = configFile.read();
 
         modify(config);
 
         configFile.write();
 
-        var expectedContents = fs.readFileSync(fixture('modified-'+configName)).toString();
-        var actualContents = fs.readFileSync(configFilePath).toString();
+        const expectedContents = fs.readFileSync(fixture('modified-'+configName)).toString();
+        const actualContents = fs.readFileSync(configFilePath).toString();
 
         assert.equal(actualContents, expectedContents);
         done();
@@ -170,8 +170,8 @@ describe("ConfigFile", function() {
     });
 
     describe('with a non existing file which is createIfNotExists() before', function () {
-      var nonExistingFile = fixture('non-existing-config.js');
-      var configFile = new ConfigFile(nonExistingFile);
+      const nonExistingFile = fixture('non-existing-config.js');
+      const configFile = new ConfigFile(nonExistingFile);
 
       beforeEach(function(done) {
         if (fs.existsSync(nonExistingFile)) {
@@ -187,8 +187,8 @@ describe("ConfigFile", function() {
       });
 
       it("writes the file and creates directories", function() {
-        var nonExistingFile = tmpPath('in/directory/non-existing-config.js');
-        var configFile = new ConfigFile(nonExistingFile);
+        const nonExistingFile = tmpPath('in/directory/non-existing-config.js');
+        const configFile = new ConfigFile(nonExistingFile);
 
         configFile.createIfNotExists();
         configFile.write();

@@ -1,9 +1,9 @@
 'use strict';
 
-var fs = require('fs-extra');
-var esprima = require('esprima');
-var util = require('util');
-var stringifyObject = require("stringify-object");
+const fs = require('fs-extra');
+const esprima = require('esprima');
+const util = require('util');
+const stringifyObject = require("stringify-object");
 
 class ConfigFile {
   constructor(filePath) {
@@ -33,9 +33,9 @@ class ConfigFile {
    * returns the config object from the read file
    */
   read() {
-    var callback = function(){};
+    const callback = function(){};
     try {
-      var data = fs.readFileSync(this.filePath);
+      const data = fs.readFileSync(this.filePath);
 
       this.contents = data.toString();
 
@@ -47,7 +47,7 @@ class ConfigFile {
       }
     }
 
-    var program;
+    let program;
 
     try {
       program = esprima.parse(this.contents, {range: true});
@@ -60,7 +60,7 @@ class ConfigFile {
       program.body.forEach(statement => {
 
         if (statement.expression && statement.expression.type === 'CallExpression') {
-          var call = statement.expression;
+          const call = statement.expression;
 
           if (call.callee.type === 'MemberExpression' && (call.callee.object.name === 'requirejs' || call.callee.object.name === 'require') && call.callee.property.name === 'config') {
             this.type = call.callee.object.name === 'require' ? 'require' : 'requirejs';
@@ -89,7 +89,7 @@ class ConfigFile {
   }
 
   write() {
-    var contents;
+    let contents;
 
     if (this.type === 'empty' || this.type === 'create-if-not-exists') {
       contents = util.format("/* globals requirejs */\nrequirejs.config(%s);\n", this.buildConfig());
