@@ -5,6 +5,8 @@ const esprima = require('esprima');
 const util = require('util');
 const stringifyObject = require("stringify-object");
 
+const noop = function(){};
+
 class ConfigFile {
   constructor(filePath) {
     this.filePath = filePath;
@@ -33,7 +35,6 @@ class ConfigFile {
    * returns the config object from the read file
    */
   read() {
-    const callback = function(){};
     try {
       const data = fs.readFileSync(this.filePath);
 
@@ -64,14 +65,14 @@ class ConfigFile {
 
           if (call.callee.type === 'MemberExpression' && (call.callee.object.name === 'requirejs' || call.callee.object.name === 'require') && call.callee.property.name === 'config') {
             this.type = call.callee.object.name === 'require' ? 'require' : 'requirejs';
-            this.readObjectExpression(call.arguments[0], callback);
+            this.readObjectExpression(call.arguments[0], noop);
             return false;
           }
         } else if(statement.type === 'VariableDeclaration') {
           statement.declarations.forEach(declarator => {
             if (declarator.id.name === 'require') {
               this.type = 'var';
-              this.readObjectExpression(declarator.init, callback);
+              this.readObjectExpression(declarator.init, noop);
               return false;
             }
           });
