@@ -16,20 +16,6 @@ module.exports = function(grunt) {
       }
     },
 
-    release: {
-       options: {
-         bump: true,
-         add: true,
-         commit: true,
-         tag: true,
-         push: true,
-         pushTags: true,
-         npm: true,
-         commitMessage: 'release <%= version %>',
-         tagMessage: 'Version <%= version %>'
-       }
-     },
-
     simplemocha: {
       options: {
         timeout: 3000,
@@ -38,7 +24,7 @@ module.exports = function(grunt) {
       },
 
       all: { src: ['test/**/*.js'] }
-    },
+    }
 
   });
 
