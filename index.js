@@ -1,3 +1,5 @@
+'use strict';
+
 var fs = require('fs-extra');
 var esprima = require('esprima');
 var util = require('util');
@@ -112,7 +114,7 @@ exports.ConfigFile = function(filePath) {
 
   this.buildConfig = function() {
     return stringifyObject(
-      that.config, 
+      that.config,
       {
         indent: '  '
       }

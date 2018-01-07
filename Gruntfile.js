@@ -1,3 +1,5 @@
+'use strict';
+
 /*global module:false*/
 module.exports = function(grunt) {
 
@@ -17,12 +19,12 @@ module.exports = function(grunt) {
     release: {
        options: {
          bump: true,
-         add: true, 
+         add: true,
          commit: true,
-         tag: true, 
-         push: true, 
-         pushTags: true, 
-         npm: true, 
+         tag: true,
+         push: true,
+         pushTags: true,
+         npm: true,
          commitMessage: 'release <%= version %>',
          tagMessage: 'Version <%= version %>'
        }

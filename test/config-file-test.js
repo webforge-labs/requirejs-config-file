@@ -1,3 +1,5 @@
+'use strict';
+
 var path = require('path');
 var chai = require('chai');
 var fs = require('fs-extra');
@@ -139,17 +141,17 @@ describe("ConfigFile", function() {
 
     it('writes the file with the modified config for a normal config', function (done) {
       testModify(
-        'normal-config.js', 
+        'normal-config.js',
         function (config) {
           config.paths['monster'] = '/path/to/monster';
-        }, 
+        },
         done
       );
     });
 
     it('writes the file with the modified config for a var config', function (done) {
       testModify(
-        'var-config.js', 
+        'var-config.js',
         function (config) {
           config.paths['lodash'] = '/path/to/lodash.min';
         },
