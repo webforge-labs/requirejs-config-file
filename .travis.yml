@@ -16,5 +16,4 @@ before_script:
 - grunt --version
 
 notifications:
-  hipchat: 1fbdbbbaa517c485f935a6d72f1110@239240
   on_success: never
