@@ -8,9 +8,9 @@ const stringifyObject = require("stringify-object");
 const noop = function(){};
 
 class ConfigFile {
-  constructor(filePath) {
+  constructor(filePath, fileSystem = undefined) {
     this.filePath = filePath;
-
+    this.fileSystem = fileSystem || fs;
     this.config = null;
 
     /**
@@ -36,7 +36,7 @@ class ConfigFile {
    */
   read() {
     try {
-      const data = fs.readFileSync(this.filePath);
+      const data = this.fileSystem.readFileSync(this.filePath);
 
       this.contents = data.toString();
 
@@ -104,7 +104,7 @@ class ConfigFile {
       contents = this.contents.substring(0, this.range[0]) + this.buildConfig() + this.contents.substring(this.range[1]);
     }
 
-    fs.outputFileSync(this.filePath, contents);
+    this.fileSystem.outputFileSync(this.filePath, contents);
   }
 
   /**
