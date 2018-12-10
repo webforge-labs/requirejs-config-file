@@ -115,6 +115,34 @@ describe("ConfigFile", function() {
         expect(config).to.exist.and.to.be.a('object').and.to.be.empty;
       });
     });
+
+    describe("with an alternative fs implementation", function() {     
+
+      const volumeDir = 'app';
+      const fileName = 'in-memory-config.js';
+      const filePath = `${volumeDir}/${fileName}`;
+
+      const unionfs = require('unionfs');
+      const memfs = require('memfs');
+      var memFiles = { };
+      var contents = fs.readFileSync(fixture('normal-config.js'), 'utf8');
+      memFiles[fileName] = contents;
+      var vol = memfs.Volume.fromJSON(memFiles, volumeDir);
+      var ufs = unionfs.ufs.use(vol);
+
+      const configFile = new ConfigFile(filePath, ufs);
+
+      it("returns the config as an object", function() {
+        const config = configFile.read();
+        expect(config).to.exist.and.to.be.a('object').and.not.to.be.empty;
+      });
+
+      it("returns all the properties in the config", function() {
+        const config = configFile.read();
+        expect(config).to.be.an('object').and.to.include.keys('paths');
+      });
+
+    });
   });
 
   describe("#write()", function() {

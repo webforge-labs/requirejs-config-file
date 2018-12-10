@@ -27,7 +27,9 @@
     "grunt": "^1.0.1",
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-simple-mocha": "~0.4.0",
-    "matchdep": "^2.0.0"
+    "matchdep": "^2.0.0",
+    "unionfs": "^3.0.2",
+    "memfs": "^2.14.1"
   },
   "dependencies": {
     "esprima": "^4.0.0",
