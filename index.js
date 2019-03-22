@@ -1,16 +1,26 @@
 'use strict';
 
-const fs = require('fs-extra');
+const fs = require('fs');
+const path = require('path');
+const makeDir = require('make-dir');
 const esprima = require('esprima');
 const util = require('util');
 const stringifyObject = require("stringify-object");
 
 const noop = function(){};
 
+function outputFileSync (filePath, contents, fileSystem = fs) {
+  const dir = path.dirname(filePath);
+  makeDir.sync(dir, {
+    fs: fileSystem
+  });
+  fileSystem.writeFileSync(filePath, contents);
+}
+
 class ConfigFile {
-  constructor(filePath, fileSystem = undefined) {
+  constructor(filePath, fileSystem = fs) {
     this.filePath = filePath;
-    this.fileSystem = fileSystem || fs;
+    this.fileSystem = fileSystem;
     this.config = null;
 
     /**
@@ -104,7 +114,7 @@ class ConfigFile {
       contents = this.contents.substring(0, this.range[0]) + this.buildConfig() + this.contents.substring(this.range[1]);
     }
 
-    this.fileSystem.outputFileSync(this.filePath, contents);
+    outputFileSync(this.filePath, contents, this.fileSystem);
   }
 
   /**
