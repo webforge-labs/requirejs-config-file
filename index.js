@@ -122,8 +122,8 @@ class ConfigFile {
    *
    * notice: you still need to write() it to have a physical existing file.
    */
-  createIfNotExists(config) {
-    this.config = config || {};
+  createIfNotExists(config = {}) {
+    this.config = config;
     this.type = 'create-if-not-exists';
   }
 
