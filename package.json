@@ -20,20 +20,21 @@
     "url": "https://github.com/webforge-labs/requirejs-config-file/issues"
   },
   "engines": {
-    "node": ">=4.0.0"
+    "node": ">=6.0.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
+    "fs-extra": "^7.0.1",
     "grunt": "^1.0.1",
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-simple-mocha": "~0.4.0",
     "matchdep": "^2.0.0",
-    "unionfs": "^3.0.2",
-    "memfs": "^2.14.1"
+    "memfs": "^2.14.1",
+    "unionfs": "^3.0.2"
   },
   "dependencies": {
     "esprima": "^4.0.0",
-    "fs-extra": "^5.0.0",
+    "make-dir": "^2.1.0",
     "stringify-object": "^3.2.1"
   }
 }
