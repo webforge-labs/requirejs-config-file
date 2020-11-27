@@ -34,7 +34,6 @@
   },
   "dependencies": {
     "esprima": "^4.0.0",
-    "make-dir": "^2.1.0",
     "stringify-object": "^3.2.1"
   }
 }

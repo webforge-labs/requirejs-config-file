@@ -2,7 +2,6 @@
 
 const fs = require('fs');
 const path = require('path');
-const makeDir = require('make-dir');
 const esprima = require('esprima');
 const util = require('util');
 const stringifyObject = require("stringify-object");
@@ -11,9 +10,7 @@ const noop = function(){};
 
 function outputFileSync (filePath, contents, fileSystem = fs) {
   const dir = path.dirname(filePath);
-  makeDir.sync(dir, {
-    fs: fileSystem
-  });
+  fileSystem.mkdirSync(dir, {recursive: true});
   fileSystem.writeFileSync(filePath, contents);
 }
 
