@@ -2,7 +2,7 @@
 
 const path = require('path');
 const chai = require('chai');
-const fs = require('fs-extra');
+const fs = require('fs');
 const expect = chai.expect;
 const assert = chai.assert;
 //chai.use(require('./helpers/file'));
@@ -13,7 +13,7 @@ const tmpPath = function (relativePath) {
 };
 
 if (!fs.existsSync(path)) {
-  fs.mkdirsSync(tmpDir);
+  fs.mkdirSync(tmpDir, {recursive: true});
 }
 
 const fixture = function(relativePath) {
@@ -116,7 +116,7 @@ describe("ConfigFile", function() {
       });
     });
 
-    describe("with an alternative fs implementation", function() {     
+    describe("with an alternative fs implementation", function() {
 
       const volumeDir = 'app';
       const fileName = 'in-memory-config.js';
@@ -148,7 +148,7 @@ describe("ConfigFile", function() {
   describe("#write()", function() {
     const testModify = function(configName, modify, done) {
       const configFilePath = tmpPath(configName);
-      fs.copy(fixture(configName), configFilePath, function (err) {
+      fs.copyFile(fixture(configName), configFilePath, function (err) {
         expect(err).to.not.exist;
 
         const configFile = new ConfigFile(configFilePath);
